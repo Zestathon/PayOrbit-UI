@@ -57,7 +57,7 @@ const Navbar = () => {
           <img
             src={payorbitLogo}
             alt="Payorbit Logo"
-            className="w-16 h-16 object-contain drop-shadow-lg"
+            className="w-20 h-20 object-contain drop-shadow-lg"
           />
           <h1 className="text-2xl md:text-3xl font-bold hidden md:block gradient-text">
             Payorbit

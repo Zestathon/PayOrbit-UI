@@ -77,19 +77,19 @@ const Register = () => {
       </div>
 
       {/* Right Side - Register Form */}
-      <div className="w-full lg:w-1/2 flex items-start justify-start lg:pl-16 p-8 overflow-y-auto max-h-screen">
-        <div className="w-full max-w-lg">
+      <div className="w-full lg:w-1/2 flex items-center justify-start lg:pl-16 p-8 overflow-hidden">
+        <div className="w-full max-w-lg py-4">
           {/* Logo/Header */}
-          <div className="mb-8">
+          <div className="mb-4">
             <img
               src={payorbitLogo}
               alt="Payorbit Logo"
-              className="w-32 h-32 mb-6 object-contain"
+              className="w-20 h-20 mb-3 object-contain"
             />
-            <h1 className="text-4xl font-bold text-gray-800 mb-3">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
               Create Account
             </h1>
-            <p className="text-gray-600 text-base">
+            <p className="text-gray-600 text-sm">
               Fill in the details to get started
             </p>
           </div>
@@ -99,7 +99,7 @@ const Register = () => {
             name="register"
             onFinish={onFinish}
             size="large"
-            className="space-y-5"
+            className="space-y-3"
             layout="vertical"
           >
             <Form.Item
@@ -211,7 +211,8 @@ const Register = () => {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold"
+                className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold [&>span]:!opacity-100"
+                style={{ transition: 'background-color 0.3s' }}
               >
                 Create Account
               </Button>
@@ -219,8 +220,8 @@ const Register = () => {
           </Form>
 
           {/* Login Link */}
-          <div className="mt-8">
-            <p className="text-gray-600 text-base">
+          <div className="mt-4">
+            <p className="text-gray-600 text-sm">
               Already have an account?{' '}
               <a
                 href="/login"

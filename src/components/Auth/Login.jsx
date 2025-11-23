@@ -70,11 +70,11 @@ const Login = () => {
       <div className="w-full lg:w-1/2 flex items-center justify-start lg:pl-16 p-8 overflow-hidden">
         <div className="w-full max-w-lg">
           {/* Logo/Header */}
-          <div className="mb-10">
+          <div className="mb-6">
             <img
               src={payorbitLogo}
               alt="Payorbit Logo"
-              className="w-32 h-32 mb-6 object-contain"
+              className="w-24 h-24 mb-4 object-contain"
             />
             <h1 className="text-4xl font-bold text-gray-800 mb-3">
               Welcome Back!
@@ -139,7 +139,8 @@ const Login = () => {
                 type="primary"
                 htmlType="submit"
                 loading={loading}
-                className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold"
+                className="w-full h-14 bg-blue-600 hover:bg-blue-700 rounded-lg text-lg font-semibold [&>span]:!opacity-100"
+                style={{ transition: 'background-color 0.3s' }}
               >
                 Sign In
               </Button>

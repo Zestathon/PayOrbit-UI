@@ -182,7 +182,7 @@ const Dashboard = () => {
           {/* Statistics Cards */}
           <Row gutter={[24, 24]} className="mb-8">
             <Col xs={24} sm={8}>
-              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-shadow">
+              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-all stats-card-hover">
                 <Statistic
                   title={<span className="text-gray-600 text-base">Total Uploads</span>}
                   value={stats.uploads?.total || 0}
@@ -193,7 +193,7 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col xs={24} sm={8}>
-              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-shadow">
+              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-all stats-card-hover">
                 <Statistic
                   title={<span className="text-gray-600 text-base">Total Employees</span>}
                   value={stats.employees?.total || 0}
@@ -204,7 +204,7 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col xs={24} sm={8}>
-              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-shadow">
+              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-all stats-card-hover">
                 <Statistic
                   title={<span className="text-gray-600 text-base">Total Amount Processed</span>}
                   value={stats.disbursement?.total || 0}
@@ -239,7 +239,11 @@ const Dashboard = () => {
                 {/* Upload Area */}
                 <Dragger
                   {...uploadProps}
-                  className="bg-white hover:bg-blue-50 transition-colors border-2 border-dashed border-blue-300"
+                  className="bg-white hover:bg-blue-50 transition-colors rounded-lg"
+                  style={{
+                    border: '3px dashed #2563eb',
+                    borderRadius: '8px'
+                  }}
                 >
                   <p className="ant-upload-drag-icon">
                     <InboxOutlined className="text-blue-600 text-6xl" />
@@ -261,6 +265,7 @@ const Dashboard = () => {
                     onClick={handleDownloadTemplate}
                     size="large"
                     className="h-12 text-lg font-semibold border-2 border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 hover:text-blue-700"
+                    style={{ outline: '2px solid #2563eb', outlineOffset: '2px' }}
                   >
                     Download Template
                   </Button>
