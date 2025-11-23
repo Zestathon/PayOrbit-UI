@@ -14,6 +14,8 @@ const PayrollDetails = () => {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(false);
   const [uploadInfo, setUploadInfo] = useState(null);
+  const [downloadModalVisible, setDownloadModalVisible] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   useEffect(() => {
     fetchEmployeeData();
@@ -57,31 +59,20 @@ const PayrollDetails = () => {
   };
 
   const handleDownloadRow = (employee) => {
-    Modal.confirm({
-      title: 'Select Download Format',
-      icon: <DownloadOutlined />,
-      content: 'Choose the format for downloading the payroll details:',
-      okText: (
-        <span>
-          <FileExcelOutlined /> Excel
-        </span>
-      ),
-      cancelText: (
-        <span>
-          <FilePdfOutlined /> PDF
-        </span>
-      ),
-      onOk: () => downloadEmployeePayroll(employee, 'excel'),
-      onCancel: () => downloadEmployeePayroll(employee, 'pdf'),
-      okButtonProps: {
-        className: 'bg-green-600 hover:bg-green-700 border-green-600',
-        type: 'primary'
-      },
-      cancelButtonProps: {
-        className: 'bg-red-600 hover:bg-red-700 border-red-600 text-white',
-        type: 'default'
-      },
-    });
+    setSelectedEmployee(employee);
+    setDownloadModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setDownloadModalVisible(false);
+    setSelectedEmployee(null);
+  };
+
+  const handleDownloadFormat = (format) => {
+    if (selectedEmployee) {
+      downloadEmployeePayroll(selectedEmployee, format);
+      handleCloseModal();
+    }
   };
 
   const downloadEmployeePayroll = async (employee, format) => {
@@ -271,11 +262,11 @@ const PayrollDetails = () => {
             <Space className="mb-4">
               <Button
                 icon={<ArrowLeftOutlined />}
-                onClick={() => navigate('/summary')}
+                onClick={() => navigate('/dashboard')}
                 size="large"
                 className="border-2 border-gray-300 hover:border-blue-500"
               >
-                Back to Summary
+                Back to Dashboard
               </Button>
             </Space>
 
@@ -308,6 +299,45 @@ const PayrollDetails = () => {
               />
             )}
           </Card>
+
+          {/* Download Format Modal */}
+          <Modal
+            title={
+              <span>
+                <DownloadOutlined className="mr-2" />
+                Select Download Format
+              </span>
+            }
+            open={downloadModalVisible}
+            onCancel={handleCloseModal}
+            footer={null}
+            centered
+            closable={true}
+          >
+            <p className="mb-6 text-gray-600">
+              Choose the format for downloading the payroll details:
+            </p>
+            <div className="flex gap-4 justify-center">
+              <Button
+                type="default"
+                icon={<FilePdfOutlined />}
+                onClick={() => handleDownloadFormat('pdf')}
+                size="large"
+                className="flex-1 h-12 bg-red-600 hover:bg-red-700 border-red-600 text-white hover:text-white"
+              >
+                PDF
+              </Button>
+              <Button
+                type="primary"
+                icon={<FileExcelOutlined />}
+                onClick={() => handleDownloadFormat('excel')}
+                size="large"
+                className="flex-1 h-12 bg-green-600 hover:bg-green-700 border-green-600"
+              >
+                Excel
+              </Button>
+            </div>
+          </Modal>
         </div>
       </Content>
     </Layout>

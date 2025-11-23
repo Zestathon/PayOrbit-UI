@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Card, Upload, Button, message, Typography, Space, Row, Col, Statistic } from 'antd';
-import { UploadOutlined, InboxOutlined, DownloadOutlined, FileTextOutlined, FileOutlined, UserOutlined, DollarOutlined } from '@ant-design/icons';
+import { UploadOutlined, InboxOutlined, DownloadOutlined, FileTextOutlined, UserOutlined, HistoryOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Layout/Navbar';
 import uploadExcelFile from '../../services/upload.service';
@@ -15,31 +15,34 @@ const Dashboard = () => {
   const [fileList, setFileList] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [stats, setStats] = useState({
-    uploads: { total: 0 },
     employees: { total: 0 },
     disbursement: { total: 0 }
   });
   const [loadingStats, setLoadingStats] = useState(false);
+  const [currentUploadId, setCurrentUploadId] = useState(null);
 
   useEffect(() => {
-    fetchDashboardStats();
+    fetchLatestUpload();
   }, []);
 
-  const fetchDashboardStats = async () => {
+  const fetchLatestUpload = async () => {
     setLoadingStats(true);
     try {
-      const response = await payrollService.getDashboardStats();
-      console.log('Dashboard stats response:', response);
+      const response = await payrollService.getUploadedFiles();
+      console.log('Latest upload response:', response);
 
-      // Handle nested response structure
-      if (response.success && response.data) {
-        setStats(response.data);
-      } else {
-        setStats(response);
+      // Get the first (latest) upload from the response
+      if (response.success && response.data && response.data.length > 0) {
+        const latestUpload = response.data[0];
+        setStats({
+          employees: { total: latestUpload.total_employees || 0 },
+          disbursement: { total: latestUpload.total_amount_processed || 0 }
+        });
+        setCurrentUploadId(latestUpload.id);
       }
     } catch (error) {
-      console.error('Error fetching dashboard stats:', error);
-      message.error('Failed to fetch dashboard statistics');
+      console.error('Error fetching latest upload:', error);
+      message.error('Failed to fetch latest upload data');
     } finally {
       setLoadingStats(false);
     }
@@ -99,8 +102,14 @@ const Dashboard = () => {
 
         setFileList([]);
 
-        // Refresh stats after successful upload
-        fetchDashboardStats();
+        // Update stats with the current upload data
+        setStats({
+          employees: { total: response.data.total_employees || 0 },
+          disbursement: { total: response.data.total_amount_processed || 0 }
+        });
+
+        // Store the current upload ID for View Summary button
+        setCurrentUploadId(response.data.id);
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -181,18 +190,7 @@ const Dashboard = () => {
 
           {/* Statistics Cards */}
           <Row gutter={[24, 24]} className="mb-8">
-            <Col xs={24} sm={8}>
-              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-all stats-card-hover">
-                <Statistic
-                  title={<span className="text-gray-600 text-base">Total Uploads</span>}
-                  value={stats.uploads?.total || 0}
-                  prefix={<FileOutlined className="text-blue-600" />}
-                  valueStyle={{ color: '#2563eb', fontSize: '32px', fontWeight: 'bold' }}
-                  loading={loadingStats}
-                />
-              </Card>
-            </Col>
-            <Col xs={24} sm={8}>
+            <Col xs={24} sm={12}>
               <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-all stats-card-hover">
                 <Statistic
                   title={<span className="text-gray-600 text-base">Total Employees</span>}
@@ -203,12 +201,12 @@ const Dashboard = () => {
                 />
               </Card>
             </Col>
-            <Col xs={24} sm={8}>
+            <Col xs={24} sm={12}>
               <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-all stats-card-hover">
                 <Statistic
                   title={<span className="text-gray-600 text-base">Total Amount Processed</span>}
                   value={stats.disbursement?.total || 0}
-                  prefix={<DollarOutlined className="text-blue-600" />}
+                  prefix={<span className="text-blue-600 text-2xl font-bold">Rs .</span>}
                   precision={2}
                   valueStyle={{ color: '#2563eb', fontSize: '32px', fontWeight: 'bold' }}
                   loading={loadingStats}
@@ -217,16 +215,26 @@ const Dashboard = () => {
             </Col>
           </Row>
 
-          {/* View Summary Button */}
-          <div className="mb-6">
+          {/* View Summary and History Buttons */}
+          <div className="mb-6 flex gap-4">
             <Button
               type="default"
               icon={<FileTextOutlined />}
-              onClick={() => navigate('/summary')}
+              onClick={() => currentUploadId && navigate(`/payroll-details/${currentUploadId}`)}
               size="large"
-              className="h-12 text-lg font-semibold border-2 border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 hover:text-blue-700"
+              disabled={!currentUploadId}
+              className="h-12 text-lg font-semibold border-2 border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 hover:text-blue-700 disabled:border-gray-300 disabled:text-gray-400"
             >
               View Summary
+            </Button>
+            <Button
+              type="default"
+              icon={<HistoryOutlined />}
+              onClick={() => navigate('/summary')}
+              size="large"
+              className="h-12 text-lg font-semibold border-2 border-green-600 text-green-600 hover:bg-green-50 hover:border-green-700 hover:text-green-700"
+            >
+              History
             </Button>
           </div>
 
