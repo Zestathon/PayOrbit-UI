@@ -22,10 +22,12 @@ api.interceptors.request.use(
     console.log('Token in localStorage:', token ? token.substring(0, 10) + '...' : 'No token');
     console.log('Request data type:', config.data instanceof FormData ? 'FormData' : typeof config.data);
 
-    // Skip adding Authorization header for login and register endpoints
+    // Skip adding Authorization header for public auth endpoints
     const isAuthEndpoint =
       config.url?.includes('/auth/login') ||
-      config.url?.includes('/auth/register');
+      config.url?.includes('/auth/register') ||
+      config.url?.includes('/auth/forgot-password') ||
+      config.url?.includes('/auth/reset-password');
 
     if (isAuthEndpoint) {
       console.log('Auth endpoint detected - skipping Authorization header');

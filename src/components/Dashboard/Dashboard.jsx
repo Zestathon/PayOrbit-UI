@@ -165,169 +165,102 @@ const Dashboard = () => {
   };
 
   return (
-    <Layout className="min-h-screen relative overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
-      {/* Decorative Gradient Orbs */}
-      <div className="gradient-orb gradient-orb-1 animate-float" style={{ animationDelay: '0s' }}></div>
-      <div className="gradient-orb gradient-orb-2 animate-float" style={{ animationDelay: '2s' }}></div>
-      <div className="gradient-orb gradient-orb-3 animate-float" style={{ animationDelay: '4s' }}></div>
-
+    <Layout className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <Navbar />
-      <Content className="p-6 md:p-8 relative z-10">
+      <Content className="p-6 md:p-8">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-8 animate-fadeInUp">
-            <Title level={1} className="!text-4xl md:!text-5xl !font-bold !mb-3 gradient-text">
+          <div className="mb-6">
+            <Title level={2} className="text-gray-800 mb-2">
               Welcome to Payorbit
             </Title>
-            <Paragraph className="text-gray-600 text-lg md:text-xl !mb-0">
+            <Paragraph className="text-gray-600 text-lg">
               Upload your employee payroll Excel file to get started with processing
             </Paragraph>
           </div>
 
-          {/* Premium Statistics Cards */}
+          {/* Statistics Cards */}
           <Row gutter={[24, 24]} className="mb-8">
             <Col xs={24} sm={8}>
-              <div className="animate-fadeInUp" style={{ animationDelay: '0.1s' }}>
-                <Card className="glass-stat-card rounded-2xl border-0 shadow-premium hover-lift overflow-hidden relative">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-2xl"></div>
-                  <Statistic
-                    title={
-                      <span className="text-gray-700 text-base font-semibold flex items-center gap-2">
-                        <FileOutlined className="text-2xl text-blue-600" />
-                        Total Uploads
-                      </span>
-                    }
-                    value={stats.uploads?.total || 0}
-                    valueStyle={{
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      fontSize: '42px',
-                      fontWeight: '800',
-                      lineHeight: '1.2'
-                    }}
-                    loading={loadingStats}
-                  />
-                </Card>
-              </div>
+              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-shadow">
+                <Statistic
+                  title={<span className="text-gray-600 text-base">Total Uploads</span>}
+                  value={stats.uploads?.total || 0}
+                  prefix={<FileOutlined className="text-blue-600" />}
+                  valueStyle={{ color: '#2563eb', fontSize: '32px', fontWeight: 'bold' }}
+                  loading={loadingStats}
+                />
+              </Card>
             </Col>
             <Col xs={24} sm={8}>
-              <div className="animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-                <Card className="glass-stat-card rounded-2xl border-0 shadow-premium hover-lift overflow-hidden relative">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-green-400/20 to-teal-400/20 rounded-full blur-2xl"></div>
-                  <Statistic
-                    title={
-                      <span className="text-gray-700 text-base font-semibold flex items-center gap-2">
-                        <UserOutlined className="text-2xl text-green-600" />
-                        Total Employees
-                      </span>
-                    }
-                    value={stats.employees?.total || 0}
-                    valueStyle={{
-                      background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      fontSize: '42px',
-                      fontWeight: '800',
-                      lineHeight: '1.2'
-                    }}
-                    loading={loadingStats}
-                  />
-                </Card>
-              </div>
+              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-shadow">
+                <Statistic
+                  title={<span className="text-gray-600 text-base">Total Employees</span>}
+                  value={stats.employees?.total || 0}
+                  prefix={<UserOutlined className="text-blue-600" />}
+                  valueStyle={{ color: '#2563eb', fontSize: '32px', fontWeight: 'bold' }}
+                  loading={loadingStats}
+                />
+              </Card>
             </Col>
             <Col xs={24} sm={8}>
-              <div className="animate-fadeInUp" style={{ animationDelay: '0.3s' }}>
-                <Card className="glass-stat-card rounded-2xl border-0 shadow-premium hover-lift overflow-hidden relative">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-2xl"></div>
-                  <Statistic
-                    title={
-                      <span className="text-gray-700 text-base font-semibold flex items-center gap-2">
-                        <DollarOutlined className="text-2xl text-purple-600" />
-                        Total Amount Processed
-                      </span>
-                    }
-                    value={stats.disbursement?.total || 0}
-                    precision={2}
-                    valueStyle={{
-                      background: 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      fontSize: '42px',
-                      fontWeight: '800',
-                      lineHeight: '1.2'
-                    }}
-                    loading={loadingStats}
-                  />
-                </Card>
-              </div>
+              <Card className="shadow-lg rounded-xl border-0 hover:shadow-xl transition-shadow">
+                <Statistic
+                  title={<span className="text-gray-600 text-base">Total Amount Processed</span>}
+                  value={stats.disbursement?.total || 0}
+                  prefix={<DollarOutlined className="text-blue-600" />}
+                  precision={2}
+                  valueStyle={{ color: '#2563eb', fontSize: '32px', fontWeight: 'bold' }}
+                  loading={loadingStats}
+                />
+              </Card>
             </Col>
           </Row>
 
           {/* View Summary Button */}
-          <div className="mb-8 animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
+          <div className="mb-6">
             <Button
               type="default"
               icon={<FileTextOutlined />}
               onClick={() => navigate('/summary')}
               size="large"
-              className="h-14 px-8 text-lg font-bold rounded-xl border-2 border-transparent bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 shadow-glow-blue hover-lift"
-              style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                border: 'none'
-              }}
+              className="h-12 text-lg font-semibold border-2 border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 hover:text-blue-700"
             >
               View Summary
             </Button>
           </div>
 
-          {/* Premium Upload Card */}
-          <div className="animate-fadeInUp" style={{ animationDelay: '0.5s' }}>
-            <Card
-              className="glass-card rounded-3xl border-0 shadow-premium-lg mb-6 overflow-hidden"
-              bodyStyle={{ padding: '48px' }}
-            >
+          {/* Upload Card */}
+          <Card
+            className="shadow-lg rounded-lg border-0 mb-6"
+            bodyStyle={{ padding: '40px' }}
+          >
               <Space direction="vertical" size="large" className="w-full">
                 {/* Upload Area */}
                 <Dragger
                   {...uploadProps}
-                  className="!rounded-2xl !border-2 !border-dashed !border-blue-300/50 hover:!border-blue-500 !bg-gradient-to-br !from-white/50 !to-blue-50/30 hover:!from-white/70 hover:!to-blue-50/50 !backdrop-blur-sm hover-scale"
-                  style={{
-                    padding: '60px 20px',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-                  }}
+                  className="bg-white hover:bg-blue-50 transition-colors border-2 border-dashed border-blue-300"
                 >
-                  <p className="ant-upload-drag-icon mb-6">
-                    <InboxOutlined
-                      className="!text-8xl animate-pulse-glow"
-                      style={{
-                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent'
-                      }}
-                    />
+                  <p className="ant-upload-drag-icon">
+                    <InboxOutlined className="text-blue-600 text-6xl" />
                   </p>
-                  <p className="ant-upload-text !text-2xl !font-bold !text-gray-800 !mb-3">
+                  <p className="ant-upload-text text-gray-800 text-lg font-semibold">
                     Click or drag Excel file to this area
                   </p>
-                  <p className="ant-upload-hint !text-base !text-gray-600">
+                  <p className="ant-upload-hint text-gray-500">
                     Support for .xlsx and .xls files only. Maximum file size: 10MB
                   </p>
                 </Dragger>
 
                 {/* Action Buttons */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Download Template Button */}
                   <Button
                     type="default"
                     icon={<DownloadOutlined />}
                     onClick={handleDownloadTemplate}
                     size="large"
-                    className="h-14 text-lg font-bold rounded-xl border-2 glass-card hover-lift"
-                    style={{
-                      borderImage: 'linear-gradient(135deg, #667eea, #764ba2) 1',
-                      color: '#667eea'
-                    }}
+                    className="h-12 text-lg font-semibold border-2 border-blue-600 text-blue-600 hover:bg-blue-50 hover:border-blue-700 hover:text-blue-700"
                   >
                     Download Template
                   </Button>
@@ -340,14 +273,13 @@ const Dashboard = () => {
                     loading={uploading}
                     disabled={fileList.length === 0}
                     size="large"
-                    className="h-14 text-lg font-bold rounded-xl shadow-glow-blue hover-lift"
+                    className="h-12 text-lg font-semibold bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300"
                   >
                     {uploading ? 'Uploading...' : 'Upload and Process'}
                   </Button>
                 </div>
               </Space>
             </Card>
-          </div>
 
         </div>
       </Content>

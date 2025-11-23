@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ConfigProvider } from 'antd';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
+import ForgotPassword from './components/Auth/ForgotPassword';
+import ResetPassword from './components/Auth/ResetPassword';
 import Dashboard from './components/Dashboard/Dashboard';
 import Summary from './components/Dashboard/Summary';
 import PayrollDetails from './components/Dashboard/PayrollDetails';
@@ -54,6 +56,14 @@ function App() {
           <Route
             path="/register"
             element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />}
+          />
+          <Route
+            path="/forgot-password"
+            element={<ForgotPassword />}
+          />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
           />
 
           {/* Protected Routes */}

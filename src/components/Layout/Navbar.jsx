@@ -67,38 +67,25 @@ const Navbar = () => {
 
       {/* User Info & Logout */}
       <div className="flex items-center gap-4">
-        {/* Premium User Info Display */}
+        {/* User Info Display - Rectangular */}
         <div
           onClick={() => navigate('/profile')}
-          className="flex items-center gap-3 px-5 py-3 glass-card rounded-2xl cursor-pointer hover-lift shadow-md relative overflow-hidden group"
-          style={{
-            border: '1px solid rgba(102, 126, 234, 0.2)',
-            background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(102,126,234,0.1) 100%)'
-          }}
+          className="flex items-center gap-3 px-4 py-2 bg-blue-50 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors duration-200"
         >
-          {/* Gradient overlay on hover */}
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-          <div className="relative">
-            <Avatar
-              style={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                verticalAlign: 'middle',
-              }}
-              size="large"
-              className="shadow-lg ring-2 ring-white ring-offset-2"
-            >
-              {getUserInitials()}
-            </Avatar>
-            {/* Online status indicator */}
-            <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-white shadow-sm animate-pulse"></div>
-          </div>
-
-          <div className="hidden md:block relative">
-            <div className="text-gray-800 font-bold text-base group-hover:text-blue-700 transition-colors">
+          <Avatar
+            style={{
+              backgroundColor: '#2563eb',
+              verticalAlign: 'middle',
+            }}
+            size="large"
+          >
+            {getUserInitials()}
+          </Avatar>
+          <div className="hidden md:block">
+            <div className="text-gray-800 font-semibold text-base hover:text-blue-600 transition-colors">
               {getUserDisplayName()}
             </div>
-            <div className="text-gray-500 text-sm font-medium">
+            <div className="text-gray-500 text-sm">
               {user?.email || 'User'}
             </div>
           </div>
