@@ -140,6 +140,9 @@ const Dashboard = () => {
     multiple: false,
     fileList,
     accept: '.xlsx,.xls',
+    showUploadList: {
+      showRemoveIcon: false,
+    },
     beforeUpload: (file) => {
       const isExcel =
         file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
@@ -158,9 +161,6 @@ const Dashboard = () => {
 
       setFileList([file]);
       return false;
-    },
-    onRemove: () => {
-      setFileList([]);
     },
   };
 

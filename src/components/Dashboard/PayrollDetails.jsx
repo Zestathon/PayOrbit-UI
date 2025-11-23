@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Table, Button, Typography, Card, message, Space, Spin } from 'antd';
-import { ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
+import { Layout, Table, Button, Typography, Card, message, Space, Spin, Modal } from 'antd';
+import { ArrowLeftOutlined, DownloadOutlined, FileExcelOutlined, FilePdfOutlined } from '@ant-design/icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import Navbar from '../Layout/Navbar';
 import payrollService from '../../services/payroll.service';
@@ -56,16 +56,45 @@ const PayrollDetails = () => {
     }
   };
 
-  const handleDownloadRow = async (employee) => {
+  const handleDownloadRow = (employee) => {
+    Modal.confirm({
+      title: 'Select Download Format',
+      icon: <DownloadOutlined />,
+      content: 'Choose the format for downloading the payroll details:',
+      okText: (
+        <span>
+          <FileExcelOutlined /> Excel
+        </span>
+      ),
+      cancelText: (
+        <span>
+          <FilePdfOutlined /> PDF
+        </span>
+      ),
+      onOk: () => downloadEmployeePayroll(employee, 'excel'),
+      onCancel: () => downloadEmployeePayroll(employee, 'pdf'),
+      okButtonProps: {
+        className: 'bg-green-600 hover:bg-green-700 border-green-600',
+        type: 'primary'
+      },
+      cancelButtonProps: {
+        className: 'bg-red-600 hover:bg-red-700 border-red-600 text-white',
+        type: 'default'
+      },
+    });
+  };
+
+  const downloadEmployeePayroll = async (employee, format) => {
     try {
       message.loading({ content: 'Preparing download...', key: 'download-row' });
 
-      // Call export API
-      const response = await payrollService.exportEmployee(employee.id, 'excel');
+      // Call export API with selected format
+      const response = await payrollService.exportEmployee(employee.id, format);
 
       // Get filename from response headers or use default
       const contentDisposition = response.headers['content-disposition'];
-      let filename = `employee_${employee.employee_id}_payroll.xlsx`;
+      const extension = format === 'pdf' ? 'pdf' : 'xlsx';
+      let filename = `employee_${employee.employee_id}_payroll.${extension}`;
 
       if (contentDisposition) {
         const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
@@ -74,9 +103,14 @@ const PayrollDetails = () => {
         }
       }
 
+      // Set appropriate content type based on format
+      const contentType = format === 'pdf'
+        ? 'application/pdf'
+        : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+
       // Create download link from blob
       const blob = new Blob([response.data], {
-        type: response.headers['content-type'] || 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        type: response.headers['content-type'] || contentType
       });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -87,7 +121,7 @@ const PayrollDetails = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      message.success({ content: 'Download completed!', key: 'download-row' });
+      message.success({ content: `${format.toUpperCase()} downloaded successfully!`, key: 'download-row' });
     } catch (error) {
       console.error('Download error:', error);
       message.error({ content: 'Failed to download. Please try again.', key: 'download-row' });

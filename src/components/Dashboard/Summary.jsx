@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Table, Button, Typography, Card, message, Space } from 'antd';
-import { EyeOutlined, ArrowLeftOutlined, DownloadOutlined } from '@ant-design/icons';
+import { EyeOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Layout/Navbar';
 import payrollService from '../../services/payroll.service';
@@ -48,24 +48,6 @@ const Summary = () => {
     navigate(`/payroll-details/${record.id}`);
   };
 
-  const handleDownload = async (record) => {
-    try {
-      message.loading({ content: 'Downloading payroll...', key: 'download' });
-      // TODO: Implement full payroll download
-      // This would download the original Excel file
-      const link = document.createElement('a');
-      link.href = `https://app-a-p-p-adqaj.ondigitalocean.app${record.file}`;
-      link.download = record.filename;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      message.success({ content: 'Download started!', key: 'download' });
-    } catch (error) {
-      console.error('Download error:', error);
-      message.error({ content: 'Failed to download', key: 'download' });
-    }
-  };
-
   const columns = [
     {
       title: 'File Name',
@@ -101,21 +83,6 @@ const Summary = () => {
           className="bg-blue-600 hover:bg-blue-700"
         >
           View
-        </Button>
-      ),
-    },
-    {
-      title: 'Download',
-      key: 'download',
-      align: 'center',
-      render: (_, record) => (
-        <Button
-          type="default"
-          icon={<DownloadOutlined />}
-          onClick={() => handleDownload(record)}
-          className="border-2 border-green-600 text-green-600 hover:bg-green-50"
-        >
-          Download
         </Button>
       ),
     },
