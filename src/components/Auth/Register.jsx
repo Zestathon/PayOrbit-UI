@@ -84,7 +84,7 @@ const Register = () => {
             <img
               src={payorbitLogo}
               alt="Payorbit Logo"
-              className="w-20 h-20 mb-3 object-contain"
+              className="w-32 h-32 mb-3 object-contain"
             />
             <h1 className="text-3xl font-bold text-gray-800 mb-2">
               Create Account

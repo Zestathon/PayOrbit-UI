@@ -74,7 +74,7 @@ const Login = () => {
             <img
               src={payorbitLogo}
               alt="Payorbit Logo"
-              className="w-24 h-24 mb-4 object-contain"
+              className="w-32 h-32 mb-4 object-contain"
             />
             <h1 className="text-4xl font-bold text-gray-800 mb-3">
               Welcome Back!

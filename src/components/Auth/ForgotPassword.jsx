@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, message, Card, Alert } from 'antd';
+import { Form, Input, Button, message, Card } from 'antd';
 import { MailOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
@@ -31,10 +31,18 @@ const ForgotPassword = () => {
       }
     } catch (error) {
       console.error('Forgot password error:', error);
-      const errorMessage =
-        error.response?.data?.message ||
-        error.message ||
-        'Failed to process request. Please try again.';
+
+      // Check for specific email error in errors object
+      let errorMessage = 'Failed to process request. Please try again.';
+
+      if (error.response?.data?.errors?.email) {
+        errorMessage = error.response.data.errors.email[0];
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
       message.error(errorMessage);
     } finally {
       setLoading(false);
@@ -105,14 +113,6 @@ const ForgotPassword = () => {
           </Form>
         ) : (
           <div className="space-y-6">
-            <Alert
-              message="Token Generated Successfully"
-              description={tokenData?.message}
-              type="success"
-              showIcon
-              className="rounded-lg"
-            />
-
             <div className="bg-gray-50 p-6 rounded-lg border-2 border-blue-200">
               <p className="text-sm text-gray-600 mb-2 font-semibold">Your Reset Token:</p>
               <div className="bg-white p-4 rounded border border-gray-300 mb-4">
@@ -127,14 +127,6 @@ const ForgotPassword = () => {
                 ⚠️ This token expires in 15 minutes. Please use it to reset your password.
               </p>
             </div>
-
-            <Alert
-              message="Important"
-              description="Copy this token and use it in the next step to reset your password."
-              type="info"
-              showIcon
-              className="rounded-lg"
-            />
 
             <Button
               type="primary"
