@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Layout, Card, Upload, Button, message, Typography, Space, Row, Col, Statistic } from 'antd';
 import { UploadOutlined, InboxOutlined, DownloadOutlined, FileTextOutlined, UserOutlined, HistoryOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Layout/Navbar';
 import uploadExcelFile from '../../services/upload.service';
-import payrollService from '../../services/payroll.service';
 
 const { Content } = Layout;
 const { Title, Paragraph } = Typography;
@@ -20,33 +19,6 @@ const Dashboard = () => {
   });
   const [loadingStats, setLoadingStats] = useState(false);
   const [currentUploadId, setCurrentUploadId] = useState(null);
-
-  useEffect(() => {
-    fetchLatestUpload();
-  }, []);
-
-  const fetchLatestUpload = async () => {
-    setLoadingStats(true);
-    try {
-      const response = await payrollService.getUploadedFiles();
-      console.log('Latest upload response:', response);
-
-      // Get the first (latest) upload from the response
-      if (response.success && response.data && response.data.length > 0) {
-        const latestUpload = response.data[0];
-        setStats({
-          employees: { total: latestUpload.total_employees || 0 },
-          disbursement: { total: latestUpload.total_amount_processed || 0 }
-        });
-        setCurrentUploadId(latestUpload.id);
-      }
-    } catch (error) {
-      console.error('Error fetching latest upload:', error);
-      message.error('Failed to fetch latest upload data');
-    } finally {
-      setLoadingStats(false);
-    }
-  };
 
   const requiredColumns = [
     'Employee ID',
