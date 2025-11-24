@@ -15,6 +15,10 @@ const Navbar = () => {
   const handleLogout = async () => {
     setLoading(true);
     try {
+      // Clear session data from localStorage
+      localStorage.removeItem('payroll_session_stats');
+      localStorage.removeItem('payroll_session_upload_id');
+
       await authService.logout();
       message.success('Logout successful');
       // Force a complete page reload to clear any cached state

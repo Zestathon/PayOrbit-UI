@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Card, Upload, Button, message, Typography, Space, Row, Col, Statistic } from 'antd';
 import { UploadOutlined, InboxOutlined, DownloadOutlined, FileTextOutlined, UserOutlined, HistoryOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,25 @@ const Dashboard = () => {
   });
   const [loadingStats, setLoadingStats] = useState(false);
   const [currentUploadId, setCurrentUploadId] = useState(null);
+
+  // Load stats from localStorage on mount
+  useEffect(() => {
+    const savedStats = localStorage.getItem('payroll_session_stats');
+    const savedUploadId = localStorage.getItem('payroll_session_upload_id');
+
+    if (savedStats) {
+      try {
+        const parsedStats = JSON.parse(savedStats);
+        setStats(parsedStats);
+      } catch (error) {
+        console.error('Error parsing saved stats:', error);
+      }
+    }
+
+    if (savedUploadId) {
+      setCurrentUploadId(parseInt(savedUploadId, 10));
+    }
+  }, []);
 
   const requiredColumns = [
     'Employee ID',
@@ -75,13 +94,19 @@ const Dashboard = () => {
         setFileList([]);
 
         // Update stats with the current upload data
-        setStats({
+        const newStats = {
           employees: { total: response.data.total_employees || 0 },
           disbursement: { total: response.data.total_amount_processed || 0 }
-        });
+        };
+        setStats(newStats);
 
         // Store the current upload ID for View Summary button
-        setCurrentUploadId(response.data.id);
+        const uploadId = response.data.id;
+        setCurrentUploadId(uploadId);
+
+        // Save to localStorage to persist during session
+        localStorage.setItem('payroll_session_stats', JSON.stringify(newStats));
+        localStorage.setItem('payroll_session_upload_id', uploadId.toString());
       }
     } catch (error) {
       console.error('Upload error:', error);

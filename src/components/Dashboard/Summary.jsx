@@ -12,34 +12,53 @@ const Summary = () => {
   const navigate = useNavigate();
   const [uploads, setUploads] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   useEffect(() => {
-    fetchUploadedFiles();
+    fetchUploadedFiles(1, 10);
   }, []);
 
-  const fetchUploadedFiles = async () => {
+  const fetchUploadedFiles = async (page = 1, pageSize = 10) => {
     setLoading(true);
     try {
-      const response = await payrollService.getUploadedFiles();
+      const response = await payrollService.getUploadedFiles(page, pageSize);
       console.log('Fetched uploads:', response);
 
       // Handle different response formats
       let uploadsList = [];
+      let totalCount = 0;
+
       if (response.success && Array.isArray(response.data)) {
         uploadsList = response.data;
+        totalCount = response.count || response.data.length;
       } else if (Array.isArray(response)) {
         uploadsList = response;
+        totalCount = response.length;
       } else if (response.results && Array.isArray(response.results)) {
         uploadsList = response.results;
+        totalCount = response.count || response.results.length;
       }
 
       setUploads(uploadsList);
+      setPagination({
+        current: page,
+        pageSize: pageSize,
+        total: totalCount,
+      });
     } catch (error) {
       console.error('Error fetching uploads:', error);
       message.error('Failed to fetch uploaded files');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTableChange = (paginationConfig) => {
+    fetchUploadedFiles(paginationConfig.current, paginationConfig.pageSize);
   };
 
   const handleView = (record) => {
@@ -122,10 +141,14 @@ const Summary = () => {
               rowKey="id"
               loading={loading}
               pagination={{
-                pageSize: 10,
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                total: pagination.total,
                 showSizeChanger: true,
                 showTotal: (total) => `Total ${total} files`,
+                pageSizeOptions: ['10', '30', '50', '100'],
               }}
+              onChange={handleTableChange}
               className="custom-table"
             />
           </Card>

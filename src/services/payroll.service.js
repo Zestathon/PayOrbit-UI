@@ -15,10 +15,10 @@ const payrollService = {
   },
 
 
-  getUploadedFiles: async () => {
+  getUploadedFiles: async (page = 1, pageSize = 10) => {
     try {
-      console.log('Fetching uploaded files...');
-      const response = await api.get('/uploads/');
+      console.log('Fetching uploaded files...', { page, pageSize });
+      const response = await api.get(`/uploads/?page=${page}&page_size=${pageSize}`);
       console.log('Uploaded files response:', response.data);
       return response.data;
     } catch (error) {
@@ -41,10 +41,10 @@ const payrollService = {
   },
 
 
-  getEmployeesByUploadId: async (uploadId) => {
+  getEmployeesByUploadId: async (uploadId, page = 1, pageSize = 10) => {
     try {
-      console.log('Fetching employees for upload ID:', uploadId);
-      const response = await api.get(`/uploads/${uploadId}/employees/`);
+      console.log('Fetching employees for upload ID:', uploadId, { page, pageSize });
+      const response = await api.get(`/uploads/${uploadId}/employees/?page=${page}&page_size=${pageSize}`);
       console.log('Employees response:', response.data);
       return response.data;
     } catch (error) {

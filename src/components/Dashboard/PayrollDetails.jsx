@@ -16,32 +16,42 @@ const PayrollDetails = () => {
   const [uploadInfo, setUploadInfo] = useState(null);
   const [downloadModalVisible, setDownloadModalVisible] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+    total: 0,
+  });
 
   useEffect(() => {
-    fetchEmployeeData();
+    fetchEmployeeData(1, 10);
   }, [uploadId]);
 
-  const fetchEmployeeData = async () => {
+  const fetchEmployeeData = async (page = 1, pageSize = 10) => {
     setLoading(true);
     try {
-      const response = await payrollService.getEmployeesByUploadId(uploadId);
+      const response = await payrollService.getEmployeesByUploadId(uploadId, page, pageSize);
       console.log('Employee data response:', response);
 
       // Handle different response formats
       let employeesList = [];
       let info = null;
+      let totalCount = 0;
 
       if (response.success && Array.isArray(response.data)) {
         employeesList = response.data;
         info = response.upload_info;
+        totalCount = response.count || response.data.length;
         console.log('Parsed employees:', employeesList);
       } else if (Array.isArray(response)) {
         employeesList = response;
+        totalCount = response.length;
       } else if (response.results && Array.isArray(response.results)) {
         employeesList = response.results;
+        totalCount = response.count || response.results.length;
       } else if (response.employees && Array.isArray(response.employees)) {
         employeesList = response.employees;
         info = response.upload_info;
+        totalCount = response.count || response.employees.length;
       }
 
       if (employeesList.length === 0) {
@@ -50,12 +60,21 @@ const PayrollDetails = () => {
 
       setEmployees(employeesList);
       setUploadInfo(info);
+      setPagination({
+        current: page,
+        pageSize: pageSize,
+        total: totalCount,
+      });
     } catch (error) {
       console.error('Error fetching employee data:', error);
       message.error('Failed to fetch employee data');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTableChange = (paginationConfig) => {
+    fetchEmployeeData(paginationConfig.current, paginationConfig.pageSize);
   };
 
   const handleDownloadRow = (employee) => {
@@ -291,10 +310,14 @@ const PayrollDetails = () => {
                 rowKey={(record) => record.id || record.employee_id || Math.random()}
                 scroll={{ x: 'max-content' }}
                 pagination={{
-                  pageSize: 10,
+                  current: pagination.current,
+                  pageSize: pagination.pageSize,
+                  total: pagination.total,
                   showSizeChanger: true,
                   showTotal: (total) => `Total ${total} employees`,
+                  pageSizeOptions: ['10', '50', '100', '200'],
                 }}
+                onChange={handleTableChange}
                 className="custom-table"
               />
             )}
